@@ -49,9 +49,11 @@ namespace SisComWebApi.Models
 
         
         [Display(Name="Data de Inclusão")]
+        [DataType(DataType.Date)]
         public DateTime CreateDate { get; set; }
         
         [Display(Name="Data de Alteração")]
+        [DataType(DataType.Date)]
         public DateTime UpdateDate { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
@@ -114,9 +116,11 @@ namespace SisComWebApi.Models
         public string BarCode { get; set; }
 
         [Display(Name="Data da Última Venda")]
+        [DataType(DataType.Date)]
         public DateTime LastSaleDate { get; set; }
 
         [Display(Name="Data da Última Compra")]
+        [DataType(DataType.Date)]
         public DateTime LastBuyDate { get; set; }
 
         //Calculated Fields

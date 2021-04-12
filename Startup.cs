@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SisComWebApi.Data;
+using SisComWebApi.Services;
 
 namespace SisComWebApi
 {
@@ -31,6 +32,7 @@ namespace SisComWebApi
             //services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("siscom_db"));
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SisComDataBase")));
             services.AddScoped<DataContext, DataContext>();
+            services.AddScoped<ProductService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

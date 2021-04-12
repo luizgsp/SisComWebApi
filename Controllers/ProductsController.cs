@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SisComWebApi.Models;
 using SisComWebApi.Data;
+using SisComWebApi.Services;
 
 namespace SisComWebApi.Controllers
 {
@@ -16,47 +17,37 @@ namespace SisComWebApi.Controllers
     {
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult<List<Product>>> Get([FromServices]DataContext context)
+        public async Task<ActionResult<List<Product>>> Get([FromServices]ProductService context)
         {
-            var products = await context.Products.Include(x => x.Category)
-                .AsNoTracking()
-                .ToListAsync();
+            var products =  context.FindAll();
             return products;
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Product>> GetById([FromServices] DataContext context, int id)
+        public async Task<ActionResult<Product>> GetById([FromServices] ProductService context, int id)
         {
-            var products = await context.Products
-                .Include(x => x.Category)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var products = context.FindById(id);
             return products;
         }
 
         [HttpGet]
         [Route("categories/{id:int}")]
-        public async Task<ActionResult<List<Product>>> GetByCategory([FromServices] DataContext context, int id)
+        public async Task<ActionResult<List<Product>>> GetByCategory([FromServices] ProductService context, int id)
         {
-            var products = await context.Products
-                .Include(x => x.Category)
-                .AsNoTracking()
-                .Where(x => x.CategoriaId == id)
-                .ToListAsync();
+            var products = context.FindByCategory(id);
             return products;
         }
 
         [HttpPost]
         [Route("")]
         public async Task<ActionResult<Product>> Post(
-            [FromServices] DataContext context,
+            [FromServices] ProductService context,
             [FromBody] Product model)
         {
             if (ModelState.IsValid)
             {
-                context.Products.Add(model);
-                await context.SaveChangesAsync();
+                context.Insert(model);
                 return model;
             }
             else

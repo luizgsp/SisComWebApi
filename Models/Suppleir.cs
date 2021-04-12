@@ -36,5 +36,35 @@ namespace SisComWebApi.Models
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
         public ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
         public ICollection<Product> Products { get; set; } = new List<Product>();
+
+        public void AddPhone(Phone obj)
+        {
+            Phones.Add(obj);
+        }
+
+        public void RemovePhone(Phone obj)
+        {
+            Phones.Remove(obj);
+        }
+
+        public void AddBank(BankAccount obj)
+        {
+            BankAccounts.Add(obj);
+        }
+
+        public void RemoveBank(BankAccount obj)
+        {
+            BankAccounts.Remove(obj);
+        }
+
+        public void AddAddress(Address obj)
+        {
+            Addresses.Add(obj);
+        }
+
+        public void RemoveAddress(Address obj)
+        {
+            Addresses.Remove(obj);
+        }
     }
 }
