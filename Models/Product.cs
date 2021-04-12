@@ -37,11 +37,11 @@ namespace SisComWebApi.Models
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [Range(1, int.MaxValue, ErrorMessage = "O múltiplo deve ser maior que ZERO")]        
         [Display(Name="Múltiplo")]
-        public decimal Multiple { get; set; }
+        public double Multiple { get; set; }
         
         public string Image { get; set; }
 
-        public StatusProduto Status { get; set; }
+        public Status Status { get; set; }
         public int CategoriaId { get; set; }
         public Category Category { get; set; }
         public int SupplierId { get; set; }
@@ -55,40 +55,47 @@ namespace SisComWebApi.Models
         public DateTime UpdateDate { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [Range(0, int.MaxValue, ErrorMessage = "O Preco deve ser maior que ZERO")]        
+        [Range(0, int.MaxValue, ErrorMessage = "O Preco NÃO deve conter valor negativo")]        
         [Display(Name="Preço Unitário de Compra")]
-        public decimal UnitBuyPrice { get; set; }
+        public double UnitBuyPrice { get; set; }
         
         
         
         [Display(Name="% IPI")]
-        public decimal IpiPercent { get; set; }        
+        [Range(0, 100, ErrorMessage = "O IPI deve ser de 0 a 100%")]        
+        public double IpiPercent { get; set; }        
         
         [Display(Name="% Frete")]
-        public decimal ShippingPercent { get; set; }
+        public double ShippingPercent { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")] 
-        [Display(Name="% ICMS")]
-        public decimal IcmsPercent { get; set; }
+        [Range(0, 100, ErrorMessage = "O ICMS deve ser de 0 a 100%")]        
+        [Display(Name= "% ICMS")]
+        public double IcmsPercent { get; set; }
         
         [Display(Name="MVA")]
-        public decimal Mva { get; set; }
+        [Range(0, 100, ErrorMessage = "O MVA deve ser de 0 a 100%")]        
+        public double Mva { get; set; }
         
         [Display(Name="% Acréscimo")]
-        public decimal AdditionsPercent { get; set; }
+        [Range(0, 100, ErrorMessage = "O campo deve ser de 0 a 100%")]        
+        public double AdditionsPercent { get; set; }
         
         
         [Display(Name="% Desconto")]
-        public decimal DiscountPercent { get; set; }
+        [Range(0, 100, ErrorMessage = "O campo deve ser de 0 a 100%")]        
+        public double DiscountPercent { get; set; }
         
-        [Display(Name="Estoque")]
-        public decimal Stock { get; set; }
+        [Required(ErrorMessage = "Este campo é obrigatório")] 
+        [Display(Name= "Estoque")]
+        [Range(0, int.MaxValue, ErrorMessage = "O Estoque deve ser maior que ZERO")]        
+        public double Stock { get; set; }
         
         [Display(Name="Estoque Mínimo")]
-        public decimal MinimumStock { get; set; }
+        public double MinimumStock { get; set; }
 
         [Display(Name="Estoque Máximo")]
-        public decimal MaximumStock { get; set; }
+        public double MaximumStock { get; set; }
 
         [Display(Name="Substituição Tributária")]
         public bool TaxSubstitution { get; set; }
@@ -115,34 +122,34 @@ namespace SisComWebApi.Models
         //Calculated Fields
 
         [Display(Name="Valor IPI")]
-        public decimal IpiValue { 
+        public double IpiValue { 
             get { return UnitBuyPrice * IpiPercent / 100; }
         }
 
         [Display(Name="% Frete")]
-        public decimal ShippingValue { get{ return UnitBuyPrice * ShippingPercent / 100; } }
+        public double ShippingValue { get{ return UnitBuyPrice * ShippingPercent / 100; } }
 
         [Display(Name="MVA")]
-        public decimal MvaValue { 
+        public double MvaValue { 
             get{ return (UnitBuyPrice + IpiValue + ShippingValue) * Mva / 100; } 
         }
 
         [Display(Name="Valor ICMS")]
-        public decimal IcmsValue { 
+        public double IcmsValue { 
             get  { return MvaValue * IcmsPercent / 100;}
          }
                 
         [Display(Name="Valor Acréscimo")]
-        public decimal AdditionsValue { get  { return (MvaValue + IcmsValue) * AdditionsPercent / 100;} }
+        public double AdditionsValue { get  { return (MvaValue + IcmsValue) * AdditionsPercent / 100;} }
 
         [Display(Name="Valor Desconto")]
-        public decimal DiscountValue { get  { return AdditionsValue * DiscountPercent / 100;} }
+        public double DiscountValue { get  { return AdditionsValue * DiscountPercent / 100;} }
 
         [Display(Name="Preço Unitário Mínimo de Venda")]
-        public decimal UnitPriceMinimumSale { get  { return (MvaValue + IcmsValue + AdditionsValue + DiscountValue); }}
+        public double UnitPriceMinimumSale { get  { return (MvaValue + IcmsValue + AdditionsValue + DiscountValue); }}
         
         [Display(Name="Preço Unitário Máximo de Venda")]
-        public decimal UnitPriceMaximumSale { get  { return (MvaValue + IcmsValue + AdditionsValue); } }
+        public double UnitPriceMaximumSale { get  { return (MvaValue + IcmsValue + AdditionsValue); } }
         
     }
 }
