@@ -55,5 +55,17 @@ namespace SisComWebApi.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public bool Delete([FromServices] ProductService context, int? id)
+        {
+            if (id == null) { return false;  }
+            var obj = context.FindById(id.Value);
+            if (obj == null) { return false; }
+            context.Remove(id.Value);
+            return true;
+
+        }
     }
 }

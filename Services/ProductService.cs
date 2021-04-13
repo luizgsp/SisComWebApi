@@ -47,5 +47,12 @@ namespace SisComWebApi.Services
             _context.Add(obj);
             _context.SaveChanges();
         }
+
+        public void Remove(int id)
+        {
+            var obj = _context.Products.Find(id);
+            _context.Products.Remove(obj);
+            _context.SaveChanges();
+        }
     }
 }
