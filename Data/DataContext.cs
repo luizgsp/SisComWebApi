@@ -17,5 +17,6 @@ namespace SisComWebApi.Data
         public DbSet<BankAccount> BankAccounts {get; set; }
         public DbSet<Phone> Phones {get; set; }
         public DbSet<Partner> Partners { get; set; }
+        public DbSet<Document> Documents { get; set; }
     }
 }

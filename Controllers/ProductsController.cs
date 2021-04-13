@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SisComWebApi.Models;
-using SisComWebApi.Data;
 using SisComWebApi.Services;
 using SisComWebApi.Services.Exceptions;
 
@@ -28,8 +24,8 @@ namespace SisComWebApi.Controllers
         [Route("{id:int}")]
         public async Task<ActionResult<Product>> GetById([FromServices] ProductService context, int id)
         {
-            var products = await context.FindByIdAsAsync(id);
-            return products;
+            var product = await context.FindByIdAsAsync(id);
+            return product;
         }
 
         [HttpGet]
@@ -44,12 +40,12 @@ namespace SisComWebApi.Controllers
         [Route("")]
         public async Task<ActionResult<Product>> Post(
             [FromServices] ProductService context,
-            [FromBody] Product model)
+            [FromBody] Product product)
         {
             if (ModelState.IsValid)
             {
-                await context.InsertAsync(model);
-                return model;
+                await context.InsertAsync(product);
+                return product;
             }
             else
             {
@@ -78,13 +74,13 @@ namespace SisComWebApi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<bool> Edit([FromServices] ProductService context, int? id, Product product)
+        public async Task<ActionResult<Product>> Edit([FromServices] ProductService context, int? id, Product product)
         {
-            if(id != product.Id) { return false; }
+            if(id != product.Id) { BadRequest(ModelState); }
             try
             {
                 await context.UpdateAsync(product);
-                return true;
+                return product;
             }
             catch (Exception e)
             {

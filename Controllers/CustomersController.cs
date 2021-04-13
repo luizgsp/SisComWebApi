@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SisComWebApi.Data;
 using SisComWebApi.Models;
+using SisComWebApi.Services;
+using SisComWebApi.Services.Exceptions;
 
 namespace SisComWebApi.Controllers
 {
@@ -13,37 +14,69 @@ namespace SisComWebApi.Controllers
     {
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult<List<Supplier>>> Get([FromServices] DataContext context)
+        public async Task<ActionResult<List<Customer>>> Get([FromServices] CustomerService context)
         {
-            var suppliers = await context.Suppliers.ToListAsync();
-            return suppliers;
+            var customers = await context.FindAllAsync();
+            return customers;
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Supplier>> GetById([FromServices] DataContext context, int id)
+        public async Task<ActionResult<Customer>> GetById([FromServices] CustomerService context, int id)
         {
-            var suppliers = await context.Suppliers
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            return suppliers;
+            var customer = await context.FindByIdAsAsync(id);
+            return customer;
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<ActionResult<Supplier>> Post(
-            [FromServices] DataContext context,
-            [FromBody] Supplier model)
+        public async Task<ActionResult<Customer>> Post(
+            [FromServices] CustomerService context,
+            [FromBody] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                context.Suppliers.Add(model);
-                await context.SaveChangesAsync();
-                return model;
+                await context.InsertAsync(customer);
+                return customer;
             }
             else
             {
                 return BadRequest(ModelState);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<bool> Delete([FromServices] CustomerService context, int? id)
+        {
+            try
+            {
+                if (id == null) { return false; }
+                var obj = await context.FindByIdAsAsync(id.Value);
+                if (obj == null) { return false; }
+                await context.RemoveAsync(id.Value);
+                return true;
+            }
+            catch (IntegrityException)
+            {
+                return false;
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult<Customer>> Edit([FromServices] CustomerService context, int? id, Customer customer)
+        {
+            if (id != customer.Id) { BadRequest(ModelState); }
+            try
+            {
+                await context.UpdateAsync(customer);
+                return customer;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
     }

@@ -33,6 +33,9 @@ namespace SisComWebApi
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SisComDataBase")));
             services.AddScoped<DataContext, DataContext>();
             services.AddScoped<ProductService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<SupplierService>();
+            services.AddScoped<CustomerService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
