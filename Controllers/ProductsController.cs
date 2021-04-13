@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SisComWebApi.Models;
 using SisComWebApi.Data;
 using SisComWebApi.Services;
+using SisComWebApi.Services.Exceptions;
 
 namespace SisComWebApi.Controllers
 {
@@ -66,6 +67,22 @@ namespace SisComWebApi.Controllers
             context.Remove(id.Value);
             return true;
 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public bool Edit([FromServices] ProductService context, int? id, Product product)
+        {
+            if(id != product.Id) { return false; }
+            try
+            {
+                context.Update(product);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

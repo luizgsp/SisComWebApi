@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SisComWebApi.Data;
 using SisComWebApi.Models;
+using SisComWebApi.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,23 @@ namespace SisComWebApi.Services
             var obj = _context.Products.Find(id);
             _context.Products.Remove(obj);
             _context.SaveChanges();
+        }
+
+        public void Update(Product obj)
+        {
+            if (!_context.Products.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException("Id not found");
+            }
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbUpdateConcurrencyException(e.Message);
+            }
         }
     }
 }
