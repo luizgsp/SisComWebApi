@@ -18,54 +18,63 @@ namespace SisComWebApi.Services
             _context = context;
         }
 
-        public List<Product> FindAll()
+        public async Task<List<Product>> FindAllAsync()
         {
-            return _context.Products
+            return await _context.Products
                 .Include(x => x.Category)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Product FindById(int id)
+        public async Task<Product> FindByIdAsAsync(int id)
         {
-            return _context.Products
+            return await _context.Products
                     .Include(x => x.Category)
                     .AsNoTracking()
-                    .FirstOrDefault(x => x.Id == id); ;
+                    .FirstOrDefaultAsync(x => x.Id == id); ;
         }
 
-        public List<Product> FindByCategory(int id)
+        public async Task<List<Product>> FindByCategoryAsync(int id)
         {
-            return _context.Products
+            return await _context.Products
                     .Include(x => x.Category)
                     .AsNoTracking()
                     .Where(x => x.CategoriaId == id)
-                    .ToList();
+                    .ToListAsync();
             
         }
 
-        public void Insert(Product obj)
+        public async Task InsertAsync(Product obj)
         {
             _context.Add(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Products.Find(id);
-            _context.Products.Remove(obj);
-            _context.SaveChanges();
+            try
+            {
+                var obj = await _context.Products.FindAsync(id);
+                _context.Products.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
+            
         }
 
-        public void Update(Product obj)
+        public async Task UpdateAsync(Product obj)
         {
-            if (!_context.Products.Any(x => x.Id == obj.Id))
+            bool hasAny = await _context.Products.AnyAsync(x => x.Id == obj.Id);
+            if (!hasAny)
             {
                 throw new NotFoundException("Id not found");
             }
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {

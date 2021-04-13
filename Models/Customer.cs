@@ -1,35 +1,30 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using SisComWebApi.Models.Enums;
 
 namespace SisComWebApi.Models
 {
-    public class Supplier
+    public class Customer
     {
         [Key]
-        public int Id {get; set;}
+        public int Id { get; set; }
 
-        [Required(ErrorMessage = "{0}  é obrigatório")]
+        [Required(ErrorMessage = "Este campo é obrigatório")]
         [StringLength(20, MinimumLength = 11, ErrorMessage = "{0} deve conter no mínimo {2} caracteres")]
         [Display(Name= "CNPJ/CPF")]
         public string CnpjCpf { get; set; }
 
-        [Required(ErrorMessage = "{0}  é obrigatório")]
+        [Required(ErrorMessage = "Este campo é obrigatório")]
         [StringLength(150, MinimumLength = 3, ErrorMessage = "{0} deve conter no mínimo {2} caracteres")]
-        [Display(Name= "Razão Social")]
+        [Display(Name= "Nome/Razão Social")]
         public string Name { get; set; }
 
-        [Display(Name= "Tipo de Fornecedor")]
-        public EnumSupplierType SupplierType { get; set; }
-
-        [Display(Name= "Tipo de Pessoa")]
-        [Required(ErrorMessage = "{0}  é obrigatório")]
+        [Display(Name = "Tipo de Pessoa")]
         public char PersonType { get; set; }
-
         public Status Status { get; set; }
 
-        [Display(Name= "Inscrição Estadual")]
+        [Display(Name = "Inscrição Estadual")]
         [MaxLength(30, ErrorMessage = "{0} deve conter até {1} caracteres")]
         public string StateRegistration { get; set; }
 
@@ -41,10 +36,8 @@ namespace SisComWebApi.Models
         [MaxLength(55, ErrorMessage = "{0} deve conter até {1} caracteres")]
         public string Contact { get; set; }
 
-
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress(ErrorMessage = "Informe um e-mail válido")]
         public string Email { get; set; }
         public string Website { get; set; }
 
@@ -74,14 +67,8 @@ namespace SisComWebApi.Models
         [Display(Name = "Endereços")]
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-        [Display(Name = "Contas Bancaria")]
-        public ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
-
         [Display(Name = "Sócios")]
         public ICollection<Partner> Partners { get; set; } = new List<Partner>();
-
-        [Display(Name = "Produtos")]
-        public ICollection<Product> Products { get; set; } = new List<Product>();
 
         public void AddPhone(Phone obj)
         {
@@ -91,26 +78,6 @@ namespace SisComWebApi.Models
         public void RemovePhone(Phone obj)
         {
             Phones.Remove(obj);
-        }
-
-        public void AddPartner(Partner obj)
-        {
-            Partners.Add(obj);
-        }
-
-        public void RemovePartner(Partner obj)
-        {
-            Partners.Remove(obj);
-        }
-
-        public void AddBank(BankAccount obj)
-        {
-            BankAccounts.Add(obj);
-        }
-
-        public void RemoveBank(BankAccount obj)
-        {
-            BankAccounts.Remove(obj);
         }
 
         public void AddAddress(Address obj)
@@ -123,14 +90,14 @@ namespace SisComWebApi.Models
             Addresses.Remove(obj);
         }
 
-        public void AddProduct(Product obj)
+        public void AddPartner(Partner obj)
         {
-            Products.Add(obj);
+            Partners.Add(obj);
         }
 
-        public void RemoveProduct(Product obj)
+        public void RemovePartner(Partner obj)
         {
-            Products.Remove(obj);
+            Partners.Remove(obj);
         }
     }
 }

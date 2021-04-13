@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SisComWebApi.Data;
 
 namespace SisComWebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210413112809_CreatedNewEntities")]
+    partial class CreatedNewEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,8 +127,8 @@ namespace SisComWebApi.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
@@ -289,13 +291,13 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("BarCode")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Brand")
                         .IsRequired()
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
@@ -304,8 +306,8 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Cfop")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -324,8 +326,8 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("FiscalClassification")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<double>("IcmsPercent")
                         .HasColumnType("float");
@@ -346,8 +348,8 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Measures")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<double>("MinimumStock")
                         .HasColumnType("float");
@@ -359,12 +361,12 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("NatOper")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Reference")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<double>("ShippingPercent")
                         .HasColumnType("float");
@@ -376,8 +378,8 @@ namespace SisComWebApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("SupplierCode")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");

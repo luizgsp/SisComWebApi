@@ -20,7 +20,7 @@ namespace SisComWebApi.Controllers
         [Route("")]
         public async Task<ActionResult<List<Product>>> Get([FromServices]ProductService context)
         {
-            var products =  context.FindAll();
+            var products =  await context.FindAllAsync();
             return products;
         }
 
@@ -28,7 +28,7 @@ namespace SisComWebApi.Controllers
         [Route("{id:int}")]
         public async Task<ActionResult<Product>> GetById([FromServices] ProductService context, int id)
         {
-            var products = context.FindById(id);
+            var products = await context.FindByIdAsAsync(id);
             return products;
         }
 
@@ -36,7 +36,7 @@ namespace SisComWebApi.Controllers
         [Route("categories/{id:int}")]
         public async Task<ActionResult<List<Product>>> GetByCategory([FromServices] ProductService context, int id)
         {
-            var products = context.FindByCategory(id);
+            var products = await context.FindByCategoryAsync(id);
             return products;
         }
 
@@ -48,7 +48,7 @@ namespace SisComWebApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Insert(model);
+                await context.InsertAsync(model);
                 return model;
             }
             else
@@ -59,24 +59,31 @@ namespace SisComWebApi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool Delete([FromServices] ProductService context, int? id)
+        public async Task<bool> Delete([FromServices] ProductService context, int? id)
         {
-            if (id == null) { return false;  }
-            var obj = context.FindById(id.Value);
-            if (obj == null) { return false; }
-            context.Remove(id.Value);
-            return true;
+            try
+            {
+                if (id == null) { return false; }
+                var obj = await context.FindByIdAsAsync(id.Value);
+                if (obj == null) { return false; }
+                await context.RemoveAsync(id.Value);
+                return true;
+            }
+            catch (IntegrityException)
+            {
+                return false;
+            }
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool Edit([FromServices] ProductService context, int? id, Product product)
+        public async Task<bool> Edit([FromServices] ProductService context, int? id, Product product)
         {
             if(id != product.Id) { return false; }
             try
             {
-                context.Update(product);
+                await context.UpdateAsync(product);
                 return true;
             }
             catch (Exception e)

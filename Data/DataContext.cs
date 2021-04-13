@@ -12,8 +12,10 @@ namespace SisComWebApi.Data
         public DbSet<Product> Products {get; set; }
         public DbSet<Category> Categories {get; set; }
         public DbSet<Supplier> Suppliers {get; set; }
+        public DbSet<Customer> Customers {get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<BankAccount> BankAccounts {get; set; }
         public DbSet<Phone> Phones {get; set; }
+        public DbSet<Partner> Partners { get; set; }
     }
 }

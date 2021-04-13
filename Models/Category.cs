@@ -9,10 +9,11 @@ namespace SisComWebApi.Models
         public int Id {get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(60, ErrorMessage = "Este campo deve conter entre 3 e 60 caracteres")]
-        [MinLength(3, ErrorMessage = "Este campo deve conter entre 3 e 60 caracteres")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "{0} deve conter no mínimo {2} caracteres")]
+        [Display(Name= "Categoria")]
         public string Title { get; set; }
 
+        [Display(Name= "Produtos")]
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
