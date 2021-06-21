@@ -6,6 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SisComWebApi.Services
 {
@@ -40,7 +45,7 @@ namespace SisComWebApi.Services
                     .AsNoTracking()
                     .Where(x => x.CategoriaId == id)
                     .ToListAsync();
-            
+
         }
 
         public async Task InsertAsync(Product obj)
@@ -61,7 +66,7 @@ namespace SisComWebApi.Services
             {
                 throw new IntegrityException(e.Message);
             }
-            
+
         }
 
         public async Task UpdateAsync(Product obj)
@@ -79,6 +84,62 @@ namespace SisComWebApi.Services
             catch (DbUpdateConcurrencyException e)
             {
                 throw new DbUpdateConcurrencyException(e.Message);
+            }
+        }
+
+        public bool GenerateExcel(string template, string target, string camposAdicionais)
+        {
+
+            try
+            {
+
+                SpreadsheetDocument spreadsheetTarget = SpreadsheetDocument.Open(target, false);
+                SpreadsheetDocument spreadsheetTemplate = SpreadsheetDocument.Open(template, false);
+
+                IEnumerable<JToken> list = DeserializeObjects(camposAdicionais);
+
+                foreach (var item in list)
+                {
+                    string name = ((JProperty)item).Name;
+                    string value = ((JValue)((JProperty)item).Value).Value?.ToString();
+
+                    using (spreadsheetTemplate)
+                    {
+                        WorkbookPart workbookPart = spreadsheetTemplate.WorkbookPart;
+                        WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                        SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+                        
+                        foreach (Row r in sheetData.Elements<Row>())
+                        {
+                            foreach (Cell c in r.Elements<Cell>())
+                            {
+                                string text = c.CellValue.Text;
+                                if (text.Contains("##" + name + "##"))
+                                    c.CellValue.Text = value;
+                            }
+                        }
+                        
+                    }
+                    spreadsheetTarget = spreadsheetTemplate;
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private IEnumerable<JToken> DeserializeObjects(string json)
+        {
+            try
+            {
+                Object obj = JsonConvert.DeserializeObject(json);
+                JObject jObject = (JObject)obj;
+                return jObject.Children();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

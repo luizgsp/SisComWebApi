@@ -47,6 +47,7 @@ namespace SisComWebApi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("{id:int}")]
         public async Task<bool> Delete([FromServices] SupplierService context, int? id)
         {
             try
@@ -64,8 +65,9 @@ namespace SisComWebApi.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPut]
         [ValidateAntiForgeryToken]
+        [Route("{id:int}")]
         public async Task<ActionResult<Supplier>> Edit([FromServices] SupplierService context, int? id, Supplier supplier)
         {
             if (id != supplier.Id) { BadRequest(ModelState); }
